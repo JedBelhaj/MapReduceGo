@@ -24,6 +24,22 @@
         </div>
       </div>
 
+      <!-- Final Result Section -->
+      <div id="final-result-section" class="mt-10">
+        <h2 class="text-xl font-semibold mb-2">Final Output</h2>
+        {{ if .FinalResult }}
+        <pre
+          class="bg-white p-4 rounded shadow-md text-gray-800 whitespace-pre-wrap"
+        >
+        {{ .FinalResult }}
+        </pre>
+        {{ else }}
+        <p class="text-gray-600 italic">
+          Job is still running. Refresh page after job is done to see results.
+        </p>
+        {{ end }}
+      </div>
+
       <!-- Tasks Table -->
       <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2">Tasks</h2>

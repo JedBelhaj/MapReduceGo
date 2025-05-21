@@ -62,7 +62,6 @@ func DoMap(
 	nReduce int,
 	mapF func(contents string) []KeyValue,
 ) {
-	inFile = inFile + ".txt"
 	content, err := ioutil.ReadFile(inFile)
 	if err != nil {
 		log.Fatalf("DoMap: cannot read file %v", err)

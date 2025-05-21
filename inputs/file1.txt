@@ -1,2 +1,3 @@
 Hello world
-hello jed
+hello go
+rpc is very good

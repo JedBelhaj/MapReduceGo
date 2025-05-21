@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"net/rpc"
+	"os"
 	"sync"
 	"time"
 )
@@ -151,12 +152,33 @@ func (m *Master) StartDashboard() {
 
 // dashboardHandler serves the dashboard HTML page
 func (m *Master) dashboardHandler(w http.ResponseWriter, r *http.Request) {
+	m.mu.Lock()
+	jobDone := m.completed >= m.totalTasks
+	m.mu.Unlock()
+
+	var result string
+	if jobDone {
+		data, err := os.ReadFile(AnsName(m.jobName)) // usually mrtmp.wordcount
+		if err != nil {
+			result = "Error reading result file."
+		} else {
+			result = string(data)
+		}
+	}
+
 	tmpl, err := template.ParseFiles("mapreduce/dashboard.html")
 	if err != nil {
 		http.Error(w, "Internal server error - template not found", http.StatusInternalServerError)
 		return
 	}
-	if err := tmpl.Execute(w, nil); err != nil {
+
+	data := struct {
+		FinalResult string
+	}{
+		FinalResult: result,
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, "Internal server error - template execution failed", http.StatusInternalServerError)
 	}
 }

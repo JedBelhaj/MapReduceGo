@@ -1,2 +1,3 @@
-jed is amazing
+go is amazing
 Hello again
+i love rpc so much
