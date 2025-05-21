@@ -1,35 +1,80 @@
-readme_content = """
+# MapReduce Distributed System
 
-# Projet MapReduce Distribué
+This project implements a mini MapReduce system in Go with:
 
-## Présentation
+- A master node coordinating tasks and tracking progress
+- Multiple worker nodes performing map and reduce jobs
+- A web dashboard showing live task progress and the final result
 
-Ce projet implémente un système MapReduce distribué en Go avec un tableau de bord web pour suivre en temps réel l’avancement des tâches et l’état des workers.
+## 🛠️ Features
 
-Le système se compose d’un processus **master** qui coordonne les tâches map et reduce, et de plusieurs processus **worker** qui exécutent les tâches. Le master sert également une interface web pour la supervision.
+- Distributed task scheduling
+- Fault tolerance via task timeout & reassignment
+- Live dashboard at `http://localhost:8080`
+- Final result appears in `mrtmp.wordcount` and is shown on the dashboard
 
----
+## 📁 File Structure
 
-## Structure du projet
-
-- `main.go` : point d’entrée pour lancer le master ou un worker.
-- `mapreduce/` : logique principale de MapReduce, incluant les implémentations master et worker.
-- `mapreduce/dashboard.html` : page HTML du tableau de bord.
-- `...` : autres fichiers sources du projet.
-
----
-
-## Lancer le projet
-
-### Prérequis
-
-- Go 1.18+ installé.
-- Terminal ou shell.
-
----
-
-### Compiler le projet
-
-```bash
-go build -o mapreduce main.go
 ```
+.
+├── mapreduce/
+│   ├── master.go        # Master logic: task assignment, dashboard, result handling
+│   ├── worker.go        # Worker logic: performs map/reduce functions
+│   ├── common.go        # Shared types and utilities
+│   ├── dashboard.html   # Frontend for the dashboard UI
+│   └── ...              # Map/Reduce functions (e.g., word count)
+├── main.go              # Entry point
+└── mrtmp.wordcount      # Final output (auto-generated)
+```
+
+## ▶️ How to Run
+
+1. **Start the Master**
+
+   ```bash
+   go run main.go -mode=master -nReduce=3 -nWorkers=2
+   ```
+
+   Starts a master with:
+
+   - 3 reduce tasks
+   - 2 worker goroutines
+
+   Opens the dashboard at: `http://localhost:8080`
+
+   Merges final result into `mrtmp.wordcount`
+
+   ⚠️ **Note**: By default, input files are defined in `main.go` (e.g., `pg-*.txt`). Make sure those exist or edit them.
+
+## 🌐 Web Dashboard
+
+Once running, visit:
+
+📍 `http://localhost:8080`
+
+You'll see:
+
+- Live task completion progress
+- All map/reduce tasks and their current status
+- Worker activity
+- The final result printed below once all tasks complete
+
+## 🧪 Example Output
+
+```
+word1  17
+word2  5
+word3  29
+...
+```
+
+## 🧰 Requirements
+
+- Go 1.18+
+- OS: Linux, macOS, or Windows
+
+## 📌 Notes
+
+- Workers are simulated as goroutines in this setup.
+- You can scale by implementing remote workers connecting to the master's RPC server (`:1234`).
+- The result file is auto-merged into `mrtmp.wordcount` after the reduce phase.

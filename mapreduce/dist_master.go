@@ -144,7 +144,8 @@ func (m *Master) StartDashboard() {
 	http.HandleFunc("/", m.dashboardHandler)
 	http.HandleFunc("/data", m.dataHandler)
 
-	log.Println("Dashboard server started on :8080")
+	fmt.Println("Dashboard running at: http://localhost:8080")
+
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("Dashboard failed:", err)
 	}
